@@ -1,0 +1,43 @@
+Authentication-Results: mx.example.org;
+ spf=fail (sender IP is 203.0.113.45) smtp.mailfrom=paypa1.example;
+ dkim=none;
+ dmarc=fail action=quarantine header.from=paypa1.example
+Received: from mail.paypa1.example (unknown [203.0.113.45])
+ by mx.example.org with ESMTP id 4F2A1; Mon, 12 Oct 2026 08:14:02 -0400
+Return-Path: <bounce@paypa1.example>
+From: "PayPal Billing" <billing@paypa1.example>
+Reply-To: <payments-desk@mailbox-support.example>
+To: <treasurer@example.org>
+Subject: Invoice #INV-88213 overdue - action required
+Date: Mon, 12 Oct 2026 08:13:55 -0400
+Message-ID: <88213.invoice@paypa1.example>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="b1"
+
+--b1
+Content-Type: text/plain; charset="utf-8"
+
+Dear Customer,
+
+Your invoice INV-88213 for $1,249.00 is overdue. Your account will be suspended
+within 24 hours unless payment is received.
+
+Review and pay your invoice: http://paypal-invoice-center.example/pay?id=88213
+
+Please confirm your payment details to avoid suspension.
+
+PayPal Billing Team
+
+--b1
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p>Dear Customer,</p>
+<p>Your invoice <b>INV-88213</b> for <b>$1,249.00</b> is overdue.
+Your account will be suspended <b>within 24 hours</b> unless payment is received.</p>
+<p><a href="http://paypal-invoice-center.example/pay?id=88213">www.paypal.com/invoice/INV-88213</a></p>
+<p>Please confirm your payment details to avoid suspension.</p>
+<p>PayPal Billing Team</p>
+</body></html>
+
+--b1--

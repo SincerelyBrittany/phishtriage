@@ -1,0 +1,21 @@
+Authentication-Results: mx.example.org;
+ spf=pass smtp.mailfrom=example.com;
+ dkim=pass header.d=example.com;
+ dmarc=pass header.from=example.com
+Received: from mail.example.com (mail.example.com [198.51.100.20])
+ by mx.example.org with ESMTP id 3A9F1; Sat, 10 Oct 2026 15:22:31 -0400
+Return-Path: <jordan@example.com>
+From: Jordan Lee <jordan@example.com>
+To: Sam Rivera <sam@example.org>
+Subject: Bake sale volunteers
+Date: Sat, 10 Oct 2026 15:22:20 -0400
+Message-ID: <bakesale.1010@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Hey Sam,
+
+Thanks for helping with the bake sale. I put the volunteer list in our shared
+folder. Can you bring the folding tables on Saturday?
+
+Jordan

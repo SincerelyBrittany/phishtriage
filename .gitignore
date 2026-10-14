@@ -1,0 +1,21 @@
+# Private notes
+PERSONALREADME.md
+
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Output
+reports/
+
+# OS
+.DS_Store

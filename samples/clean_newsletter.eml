@@ -1,0 +1,37 @@
+Authentication-Results: mx.example.org;
+ spf=pass smtp.mailfrom=mail.sendservice.example;
+ dkim=pass header.d=riversidegarden.example;
+ dmarc=pass header.from=riversidegarden.example
+Received: from out.sendservice.example (out.sendservice.example [198.51.100.150])
+ by mx.example.org with ESMTP id 77E2C; Fri, 09 Oct 2026 10:00:03 -0400
+Return-Path: <bounce-4421@mail.sendservice.example>
+From: "Riverside Community Garden" <news@riversidegarden.example>
+To: <member@example.org>
+Subject: October newsletter: fall planting day
+Date: Fri, 09 Oct 2026 10:00:00 -0400
+Message-ID: <oct2026.news@riversidegarden.example>
+List-Unsubscribe: <https://riversidegarden.example/unsubscribe>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="n1"
+
+--n1
+Content-Type: text/plain; charset="utf-8"
+
+Hi neighbors,
+
+Fall planting day is Saturday, October 24 at 9am. Bring gloves and a friend.
+Read more: https://riversidegarden.example/news/fall-planting
+
+Unsubscribe: https://riversidegarden.example/unsubscribe
+
+--n1
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p>Hi neighbors,</p>
+<p>Fall planting day is Saturday, October 24 at 9am. Bring gloves and a friend.</p>
+<p><a href="https://riversidegarden.example/news/fall-planting">Read more</a></p>
+<p><a href="https://riversidegarden.example/unsubscribe">riversidegarden.example/unsubscribe</a></p>
+</body></html>
+
+--n1--
