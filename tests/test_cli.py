@@ -8,7 +8,7 @@ runner = CliRunner()
 
 EXPECTED = {
     "fake_invoice.eml": "Malicious",
-    "credential_harvest.eml": "Suspicious",
+    "credential_harvest.eml": "Malicious",
     "html_attachment.eml": "Suspicious",
     "clean_newsletter.eml": "Clean",
     "clean_personal.eml": "Clean",

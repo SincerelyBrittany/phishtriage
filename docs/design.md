@@ -37,7 +37,7 @@ don't drown out every other signal. Total is capped at 100.
 | Severity | Points | Examples |
 | --- | --- | --- |
 | critical | 40 | URL listed on URLhaus, indicator flagged by 2+ VirusTotal engines |
-| high | 25 | DMARC fail, lookalike sender domain, executable or double-extension attachment |
+| high | 25 | DMARC fail, lookalike sender domain (including character swaps inside a longer domain, like `micros0ft-support`), executable or double-extension attachment |
 | medium | 15 | SPF/DKIM fail, Reply-To mismatch, link text mismatch, raw-IP link, brand name in unrelated domain |
 | low | 5 | SPF softfail, Return-Path mismatch, URL shortener, archive attachment, urgency or credential language |
 
@@ -58,7 +58,7 @@ Why these choices:
 | Sample | Expected | Result | Score |
 | --- | --- | --- | --- |
 | `fake_invoice.eml` | Malicious | Malicious | 100 |
-| `credential_harvest.eml` | Suspicious | Suspicious | 45 |
+| `credential_harvest.eml` | Malicious | Malicious | 55 |
 | `html_attachment.eml` | Suspicious | Suspicious | 30 |
 | `clean_newsletter.eml` | Clean | Clean | 5 |
 | `clean_personal.eml` | Clean | Clean | 0 |
@@ -66,6 +66,12 @@ Why these choices:
 5/5 correct. The sample set is small and synthetic, so this checks the rules behave as
 intended rather than measuring real-world precision and recall. Next step: label a larger
 set of public phishing samples and legitimate mail and report precision/recall here.
+
+## Failure log
+
+| Date | What broke | How it was triaged | What changed |
+| --- | --- | --- | --- |
+| 2026-10-21 | `credential_harvest.eml` (a fake Microsoft password-reset from `micros0ft-support.example`) scored only Suspicious (45). | The lookalike check caught `paypa1.com` as a character swap (high) but only when the swapped word was the whole domain label. `micros0ft-support` was split into tokens, normalized to `microsoft`, and reported as a plain brand mention (medium), so the `0`-for-`o` swap was lost. | Tokens are now compared before and after normalizing: if a token only matches a brand after swapping characters back, it's flagged high ("imitates microsoft by swapping characters"). A plain brand word in a longer domain (`microsoft-support.example`) stays medium. Added tests for both cases; the sample now scores Malicious (55). |
 
 ## Known limitations
 
