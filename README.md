@@ -114,3 +114,4 @@ See [docs/design.md](docs/design.md) for the scoring rules and threat model.
 ## License
 
 MIT. For educational and defensive use. Only analyze emails you're authorized to handle.
+# phishtriage
