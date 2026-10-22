@@ -51,6 +51,11 @@ def test_lookalike_classify():
     assert lookalike.classify("rnicrosoft.com")[0] is Severity.HIGH
     assert lookalike.classify("paypall.com")[0] is Severity.HIGH
     assert lookalike.classify("paypal.secure-login.example")[0] is Severity.MEDIUM
+    # Swapped characters inside a longer domain are still a disguise.
+    assert lookalike.classify("micros0ft-support.example")[0] is Severity.HIGH
+    assert lookalike.classify("secure.paypa1-billing.example")[0] is Severity.HIGH
+    # A plain brand word in a longer domain stays medium.
+    assert lookalike.classify("microsoft-support.example")[0] is Severity.MEDIUM
     assert lookalike.classify("xn--pypal-4ve.com")[0] is Severity.MEDIUM
     assert lookalike.classify("www.paypal.com") is None
     assert lookalike.classify("login.microsoftonline.com") is None

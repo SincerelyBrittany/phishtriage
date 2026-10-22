@@ -104,7 +104,15 @@ def classify(host: str) -> tuple[Severity, str] | None:
         if len(brand) >= MIN_FUZZY_LEN and edit_distance(norm, brand) == 1:
             return Severity.HIGH, f"is one letter off from {brand}"
 
-    tokens = [normalize(t) for t in re.split(r"[.\-_]", host) if t]
+    raw_tokens = [t for t in re.split(r"[.\-_]", host) if t]
+    # A brand spelled with swapped characters inside a longer domain
+    # (micros0ft-support.example) is deliberate disguise, not a coincidence.
+    for raw in raw_tokens:
+        norm_token = normalize(raw)
+        if norm_token != raw and norm_token in BRANDS and len(norm_token) >= 4:
+            return Severity.HIGH, f"imitates {norm_token} by swapping characters"
+
+    tokens = [normalize(t) for t in raw_tokens]
     for brand in BRANDS:
         if len(brand) >= 4 and brand in tokens:
             return Severity.MEDIUM, f"contains the {brand} name but isn't a {brand} domain"

@@ -1,8 +1,26 @@
 # PhishTriage
 
+[![CI](https://github.com/SincerelyBrittany/phishtriage/actions/workflows/ci.yml/badge.svg)](https://github.com/SincerelyBrittany/phishtriage/actions/workflows/ci.yml)
+
 A command-line tool that analyzes a suspicious email and tells you whether it's phishing, why, and what to do next.
 
 Give it a raw email (`.eml`) and it checks sender authentication, pulls out links, domains, IPs and attachment hashes, looks them up in threat-intel services, and gives you a verdict (**Clean**, **Suspicious** or **Malicious**) with a plain-English explanation.
+
+## Why I built it
+
+I first analyzed phishing emails by hand for a security lab: reading headers, checking SPF/DKIM/DMARC, pulling out links and looking them up one at a time, then writing up a report. PhishTriage automates that same workflow so it takes seconds instead of a lab session, explains its verdict in plain English for non-technical people, and can run over a whole folder in a script.
+
+## Results
+
+| Sample (synthetic) | Expected | Result | Score |
+| --- | --- | --- | --- |
+| `fake_invoice.eml` | Malicious | Malicious | 100 |
+| `credential_harvest.eml` | Malicious | Malicious | 55 |
+| `html_attachment.eml` | Suspicious | Suspicious | 30 |
+| `clean_newsletter.eml` | Clean | Clean | 5 |
+| `clean_personal.eml` | Clean | Clean | 0 |
+
+Offline mode, no API keys. 44 tests run in CI on Python 3.10, 3.11 and 3.12. The sample set is small, so this shows the rules behave as designed; measuring precision and recall on a larger labeled set is next.
 
 ## Features
 
@@ -19,7 +37,7 @@ Give it a raw email (`.eml`) and it checks sender authentication, pulls out link
 Requires Python 3.10+.
 
 ```bash
-git clone https://github.com/<your-username>/phishtriage.git
+git clone https://github.com/SincerelyBrittany/phishtriage.git
 cd phishtriage
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
@@ -109,9 +127,19 @@ pytest
 ruff check .
 ```
 
-See [docs/design.md](docs/design.md) for the scoring rules and threat model.
+## Design decisions
+
+- **Treats every email as hostile.** Attachments are hashed in memory and never written to disk; URLs are looked up by ID, never visited. Only the topmost `Authentication-Results` header is trusted, because a sender can forge the ones below it.
+- **Each check counts once.** Ten bad links don't drown out every other signal; the score reflects how many *kinds* of red flags an email has.
+- **Weighted for real mail.** Return-Path mismatches and urgent wording score low, because legitimate newsletters and billing emails do both.
+- **Free-tier friendly.** Lookups are cached for 24 hours, capped per email, and stop on rate limits.
+
+See [docs/design.md](docs/design.md) for the full scoring table, threat model, failure log and known limitations.
+
+## At scale
+
+At 10,000× the volume (a company's whole reported-phish inbox), the single-process CLI would become a queue-fed service: workers parse and score in parallel, threat-intel lookups go through a shared cache with a paid API tier, and results feed a SIEM or ticketing system instead of the terminal. The checks themselves are already pure functions over a parsed email, so they'd move over unchanged.
 
 ## License
 
 MIT. For educational and defensive use. Only analyze emails you're authorized to handle.
-# phishtriage
